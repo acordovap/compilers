@@ -17,6 +17,7 @@ public class First {
 
 	private Grammar g;
 	private Map<String, Set<String>> first;
+	private Map<ProductionRule, Set<String>> first_p;
 	private static Logger logger = Logger.getLogger(First.class.getName());
 	private static Level LVL = Level.SEVERE;
 
@@ -24,6 +25,7 @@ public class First {
 		super();
 		this.g = g;
 		this.first = new HashMap<>();
+		this.first_p = new HashMap<>();
 		logger.setLevel(LVL);
 		computeFirst();
 	}
@@ -42,10 +44,12 @@ public class First {
 		}
 		
 		ArrayList<ProductionRule> prs = new ArrayList<>();
+		//ArrayList<ProductionRule> prs_p = new ArrayList<>();
 		for(ProductionRule pr: g.getPrules()) { //Obtaining production rules for NonTerminals
-			if(g.getNonterminals().contains(pr.getL())) {
+			//if(g.getNonterminals().contains(pr.getL())) {
 				prs.add(pr);
-			}
+			//}
+			//prs_p.add(pr); //All the production rules
 		}
 		int j=0;
 		int check = first.hashCode();
@@ -61,8 +65,10 @@ public class First {
 				if( (i==b.size()-1) && (first.get(b.get(i)).contains(Grammar.EPSILON)) ) {
 					rhs.add(Grammar.EPSILON);
 				}
+				//first_p.put(pr, new );
+				first_p.put(pr, rhs);
 				first.get(pr.getL()).addAll(rhs);
-					
+				//logger.info(pr.toString() + "\t->\t" + first.get(pr.getL()));
 			}
 			logger.info("=="+j+"==\n"+toString());
 			if(check == first.hashCode()) {
@@ -85,10 +91,18 @@ public class First {
 		return first;
 	}
 
+	public Map<ProductionRule, Set<String>> getFirst_P() {
+		return first_p;
+	}
+	
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("==FIRST==\n");
 		for(Map.Entry<String, Set<String>> e: first.entrySet()) {
+			sb.append(e.getKey() + "\t->\t" + e.getValue().toString() + "\n");
+		}
+		sb.append("==first==\n");
+		for(Map.Entry<ProductionRule, Set<String>> e: first_p.entrySet()) {
 			sb.append(e.getKey() + "\t->\t" + e.getValue().toString() + "\n");
 		}
 		return sb.toString();
