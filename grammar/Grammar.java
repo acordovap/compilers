@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 public class Grammar {
 
+	public static final String EPSILON = "e";
+	public static final String EOF = "eof";	
+	
 	private ArrayList<ProductionRule> prules;
 	private ArrayList<String> terminals;
 	private ArrayList<String> nonterminals;
-	
 	
 	public Grammar(ArrayList<ProductionRule> prules) {
 		super();
