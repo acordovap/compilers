@@ -52,7 +52,7 @@ public class LlTable {
 				}
 			}
 			if(fip.getFirstPlus_P().get(p).contains(Grammar.EOF)) {
-				table.get(p.getL()).put(Grammar.EOF, p.toString()); // put the rule
+				//table.get(p.getL()).put(Grammar.EOF, p.toString()); // put the rule
 				table.get(p.getL()).put(Grammar.EOF, Integer.toString(g.getPrules().indexOf(p))); // put the index rule
 			}
 		}
