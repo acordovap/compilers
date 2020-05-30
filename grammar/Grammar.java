@@ -7,6 +7,7 @@ public class Grammar {
 	public static final String EPSILON = "e";
 	public static final String EOF = "eof";	
 	
+	private String start;
 	private ArrayList<ProductionRule> prules;
 	private ArrayList<String> terminals;
 	private ArrayList<String> nonterminals;
@@ -32,6 +33,7 @@ public class Grammar {
 				}
 			}
 		}
+		start = prules.get(0).getL();
 	}
 	
 	public ArrayList<ProductionRule> getPrules() {
@@ -46,12 +48,21 @@ public class Grammar {
 		return nonterminals;
 	}
 	
+	public String getStart() {
+		return start;
+	}
+
+	public void setStart(String start) {
+		this.start = start;
+	}
+	
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("==Production Rules==\n");
 		for(ProductionRule pr: prules) {
 			sb.append(pr.toString()+"\n");
 		}
+		sb.append("\n==Start symbol==\n"+start+"\n");
 		sb.append("\n==Terminals:==\n");
 		for(String s: terminals) {
 			sb.append(s+"\n");
