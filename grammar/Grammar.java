@@ -6,6 +6,7 @@ public class Grammar {
 
 	public static final String EPSILON = "e";
 	public static final String EOF = "eof";	
+	public static final String ERROR = "-";
 	
 	private String start;
 	private ArrayList<ProductionRule> prules;
