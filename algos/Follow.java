@@ -13,33 +13,29 @@ import grammar.Grammar;
 import grammar.GrammarReader;
 import grammar.ProductionRule;
 
-public class First {
+public class Follow {
 
 	private Grammar g;
-	private Map<String, Set<String>> first;
+	private Map<String, Set<String>> follow;
 	private static Logger logger = Logger.getLogger(First.class.getName());
 	private static Level LVL = Level.SEVERE;
-
-	public First(Grammar g) {
+	
+	public Follow(Grammar g) {
 		super();
 		this.g = g;
-		this.first = new HashMap<>();
+		this.follow = new HashMap<>();
 		logger.setLevel(LVL);
-		computeFirst();
+		computeFollow();
 	}
-
-	public void computeFirst() {
-		for(String s: g.getTerminals()) {
-			first.put(s, new HashSet<>());
-			first.get(s).add(s);
-		}
-		first.put(Grammar.EPSILON, new HashSet<>()); 
-		first.get(Grammar.EPSILON).add(Grammar.EPSILON);
-		first.put(Grammar.EOF, new HashSet<>()); 
-		first.get(Grammar.EOF).add(Grammar.EOF);
+	
+	public void computeFollow() {
+		First f = new First(this.g);
+		
 		for(String s: g.getNonterminals()) {
-			first.put(s, new HashSet<>());
+			follow.put(s, new HashSet<>());
 		}
+		follow.put(g.getStart(), new HashSet<>());
+		follow.get(g.getStart()).add(Grammar.EOF);
 		
 		ArrayList<ProductionRule> prs = new ArrayList<>();
 		for(ProductionRule pr: g.getPrules()) { //Obtaining production rules for NonTerminals
@@ -48,47 +44,45 @@ public class First {
 			}
 		}
 		int j=0;
-		int check = first.hashCode();
+		int check = follow.hashCode();
 		while(true) {
 			for(ProductionRule pr: prs) {
 				ArrayList<String> b = pr.getR();
-				Set<String> rhs = new HashSet<>(firstMinusEpsilon(b.get(0)));
-				int i = 0;
-				while(first.get(b.get(i)).contains(Grammar.EPSILON) && i < b.size()-1) {
-					rhs.addAll(new HashSet<>(firstMinusEpsilon(b.get(i+1))));
-					i++;
+				Set<String> trailer = new HashSet<String>(follow.get(pr.getL()));
+				for(int i = b.size()-1; i >= 0; i--) {
+					if(g.getNonterminals().contains(b.get(i))) {
+						follow.get(b.get(i)).addAll(trailer);
+						if(f.getFirst().get(b.get(i)).contains(Grammar.EPSILON)) {
+							trailer.addAll(f.firstMinusEpsilon(b.get(i)));
+						}
+						else {
+							trailer = new HashSet<String>(f.getFirst().get(b.get(i)));
+						}
+					}
+					else {
+						trailer = new HashSet<String>(f.getFirst().get(b.get(i)));
+					}
 				}
-				if( (i==b.size()-1) && (first.get(b.get(i)).contains(Grammar.EPSILON)) ) {
-					rhs.add(Grammar.EPSILON);
-				}
-				first.get(pr.getL()).addAll(rhs);
-					
 			}
 			logger.info("=="+j+"==\n"+toString());
-			if(check == first.hashCode()) {
+			if(check == follow.hashCode()) {
 				break;
 			}
 			else {
-				check = first.hashCode();
+				check = follow.hashCode();
 			}
 			j++;
 		}
 	}
-	
-	public Set<String> firstMinusEpsilon(String b){
-		Set<String> firstB =new HashSet<>(first.get(b));
-		firstB.remove(Grammar.EPSILON);
-		return firstB;
-	}
 
-	public Map<String, Set<String>> getFirst() {
-		return first;
+	public Map<String, Set<String>> getFollow() {
+		return follow;
 	}
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("==FIRST==\n");
-		for(Map.Entry<String, Set<String>> e: first.entrySet()) {
+		sb.append("==FOLLOW==\n");
+		for(Map.Entry<String, Set<String>> e: follow.entrySet()) {
 			sb.append(e.getKey() + "\t->\t" + e.getValue().toString() + "\n");
 		}
 		return sb.toString();
@@ -96,8 +90,8 @@ public class First {
 	
 	public static void main(String[] args) throws IOException {
 		Grammar g = GrammarReader.readGrammarFromFile("C:\\Users\\Alan\\Desktop\\grammar0.txt");
-		First f = new First(g);
+		Follow f = new Follow(g);
 		System.out.println(f.toString());
 	}
-
+	
 }
