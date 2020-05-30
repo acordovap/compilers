@@ -94,7 +94,7 @@ public class Follow {
 		}		
 		sb.append("==follow==\n");
 		for(Map.Entry<ProductionRule, Set<String>> e: follow_p.entrySet()) {
-			sb.append(e.getKey() + "\t->\t" + e.getValue().toString() + "\n");
+			sb.append(e.getKey() + "\t:\t" + e.getValue().toString() + "\n");
 		}
 		return sb.toString();
 	}

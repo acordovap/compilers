@@ -50,7 +50,7 @@ public class FirstPlus {
 		StringBuffer sb = new StringBuffer();
 		sb.append("==FIRST PLUS==\n");
 		for(Map.Entry<ProductionRule, Set<String>> e: firstplus_p.entrySet()) {
-			sb.append(e.getKey() + "\t->\t" + e.getValue().toString() + "\n");
+			sb.append(e.getKey() + "\t:\t" + e.getValue().toString() + "\n");
 		}
 		return sb.toString();
 	}

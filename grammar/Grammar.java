@@ -7,6 +7,7 @@ public class Grammar {
 	public static final String EPSILON = "e";
 	public static final String EOF = "eof";	
 	public static final String ERROR = "-";
+	public static final String PLACEHOLDER = ".";
 	
 	private String start;
 	private ArrayList<ProductionRule> prules;
@@ -61,7 +62,7 @@ public class Grammar {
 		StringBuffer sb = new StringBuffer();
 		sb.append("==Production Rules==\n");
 		for(ProductionRule pr: prules) {
-			sb.append(pr.toString()+"\n");
+			sb.append(prules.indexOf(pr) + ":\t" + pr.toString()+"\n");
 		}
 		sb.append("\n==Start symbol==\n"+start+"\n");
 		sb.append("\n==Terminals:==\n");

@@ -46,10 +46,7 @@ public class First {
 		ArrayList<ProductionRule> prs = new ArrayList<>();
 		//ArrayList<ProductionRule> prs_p = new ArrayList<>();
 		for(ProductionRule pr: g.getPrules()) { //Obtaining production rules for NonTerminals
-			//if(g.getNonterminals().contains(pr.getL())) {
-				prs.add(pr);
-			//}
-			//prs_p.add(pr); //All the production rules
+			prs.add(pr);
 		}
 		int j=0;
 		int check = first.hashCode();
@@ -103,7 +100,7 @@ public class First {
 		}
 		sb.append("==first==\n");
 		for(Map.Entry<ProductionRule, Set<String>> e: first_p.entrySet()) {
-			sb.append(e.getKey() + "\t->\t" + e.getValue().toString() + "\n");
+			sb.append(e.getKey() + "\t:\t" + e.getValue().toString() + "\n");
 		}
 		return sb.toString();
 	}

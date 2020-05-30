@@ -38,19 +38,24 @@ public class LlTable {
 		for(String nt: g.getNonterminals()) {
 			table.put(nt, new HashMap<String, String>());
 			for(String t: g.getTerminals()) {
-				table.get(nt).put(t, Grammar.ERROR);
+				if(!t.equals(Grammar.EPSILON)) //omit epsilon
+					table.get(nt).put(t, Grammar.ERROR);
 			}
+			table.get(nt).put(Grammar.EOF, Grammar.ERROR);
 		}
 		
 		for(ProductionRule p: g.getPrules()) {
 			for(String s: fip.getFirstPlus_P().get(p)) {
 				if(g.getTerminals().contains(s)) {
-					table.get(p.getL()).put(s, p.toString());
+					//table.get(p.getL()).put(s, p.toString()); // put the rule
+					table.get(p.getL()).put(s, Integer.toString(g.getPrules().indexOf(p)) ); // put the index rule 
 				}
 			}
+			if(fip.getFirstPlus_P().get(p).contains(Grammar.EOF)) {
+				table.get(p.getL()).put(Grammar.EOF, p.toString()); // put the rule
+				table.get(p.getL()).put(Grammar.EOF, Integer.toString(g.getPrules().indexOf(p))); // put the index rule
+			}
 		}
-		
-		
 	}
 	
 	public String toString() {
@@ -59,7 +64,7 @@ public class LlTable {
 		for(Map.Entry<String, HashMap<String, String>> e: table.entrySet()) {
 			sb.append(e.getKey()+"\t");
 			for(Map.Entry<String, String> ee:  e.getValue().entrySet()) {
-				sb.append("\n\t"+ee.getKey()+"\t:\t");
+				sb.append("\n\t"+ee.getKey()+"\t: ");
 				sb.append(ee.getValue());
 			}
 			sb.append("\n");
@@ -70,6 +75,7 @@ public class LlTable {
 	public static void main(String[] args) throws IOException {
 		Grammar g = GrammarReader.readGrammarFromFile("C:\\Users\\Alan\\Desktop\\grammar0.txt");
 		LlTable t  = new LlTable(g);
+		System.out.println(g.toString());
 		System.out.println(t.toString());
 	}
 	
