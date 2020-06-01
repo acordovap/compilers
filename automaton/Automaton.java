@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Automaton {
 	
 	public static final String ERRORSTATE = "-";
+	public static final String EPSILON = "e";
 	
 	private ArrayList<String> alphabet;
 	private ArrayList<String> states;
@@ -36,6 +37,29 @@ public class Automaton {
 		return states;
 	}
 	
-	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("==Automaton==\n");
+		for(String s: alphabet) {
+			sb.append(s+" ");
+		}
+		sb.append("\n==States:==\n");
+		for(String s: states) {
+			sb.append(s+" ");
+		}sb.append("\n==Table:==\n");
+		sb.append("\t\t");
+		for(String s: alphabet) {
+			sb.append(s+"\t");
+		}
+		sb.append("\n");
+		for(int i = 0; i < automaton.size(); i++) {
+			sb.append(states.get(i) + "\t->\t");
+			for(String s: automaton.get(i)) {
+				sb.append(s +"\t");
+			}
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
 	
 }
